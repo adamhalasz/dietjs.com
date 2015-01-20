@@ -1,0 +1,41 @@
+<div id="footer-element" class="wrap"> 
+	<a href="https://github.com/adamhalasz/diet">Github</a> <span class="separator">|</span>
+	<a href="https://www.npmjs.org/package/diet">NPM</a> <span class="separator">|</span> 
+	<a href="https://github.com/adamhalasz/diet/wiki/Plugins">Modules</a> <span class="separator">|</span> 
+	<a href="/resources/license">MIT Licensed</a> <span class="separator">|</span> 
+	<span style="color: #999;">by</span> <a href="http://adamhalasz.com/">Adam Halasz</a>
+
+    <br><br>
+    <div id="badges">
+        <a href="https://travis-ci.org/adamhalasz/diet">
+            <img src="https://camo.githubusercontent.com/56eb0ccafb78ab8e5134ddca57b29044d6b488fc/687474703a2f2f696d672e736869656c64732e696f2f7472617669732f6164616d68616c61737a2f646965742e7376673f7374796c653d666c6174" alt="Build Status" data-canonical-src="http://img.shields.io/travis/adamhalasz/diet.svg?style=flat" style="max-width:100%;">
+        </a> 
+        <a href="https://www.npmjs.org/package/diet">
+            <img src="https://camo.githubusercontent.com/97a69a730736353579efc7187a6341f5fd54feb5/687474703a2f2f696d672e736869656c64732e696f2f6e706d2f762f646965742e7376673f7374796c653d666c6174" alt="NPM" data-canonical-src="http://img.shields.io/npm/v/diet.svg?style=flat" style="max-width:100%;">
+        </a>
+        <a href="https://www.npmjs.org/package/diet"><img src="https://camo.githubusercontent.com/86d7fc69fc7ac86f065d424df02f03b6316c42a9/687474703a2f2f696d672e736869656c64732e696f2f6e706d2f646d2f646965742e7376673f7374796c653d666c6174" alt="Downloads" data-canonical-src="http://img.shields.io/npm/dm/diet.svg?style=flat" style="max-width:100%;">
+        </a> 
+        <a href="https://coveralls.io/r/adamhalasz/diet">
+            <img src="https://camo.githubusercontent.com/21b714fd809ce75a4beb67dbe5cbfb1c9c012e09/687474703a2f2f696d672e736869656c64732e696f2f636f766572616c6c732f6164616d68616c61737a2f646965742e7376673f7374796c653d666c6174" alt="Coveralls" data-canonical-src="http://img.shields.io/coveralls/adamhalasz/diet.svg?style=flat" style="max-width:100%;">
+        </a>
+    </div>
+</div>
+
+<!-- prettyprint -->
+{{if this.page != 'home':}}
+	<script src="/prettify/prettify.js" type="text/javascript"></script>
+	<script>window.onload = function(){ if(Toc) { Toc(); } prettyPrint(); }</script>
+{{else:}}
+	<script>
+		window.onload = function(){
+			setInterval(function(){
+				var dash = document.getElementById('dash')
+				if(dash.style.display === 'none'){
+					dash.style.display = 'inline'
+				} else{
+					dash.style.display = 'none'
+				}
+			}, 1024)
+		}
+	</script>
+{{end}}

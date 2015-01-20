@@ -1,0 +1,343 @@
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro', 'Intro'}}</li>
+	
+	<!-- Signal Request -->
+	<li>{{-link 'url'}}</li>
+	<li>{{-link 'query'}}</li>
+	<li>{{-link 'params'}}</li>
+	<li>{{-link 'body'}}</li>
+	<li>{{-link 'headers'}}</li>
+	<li>{{-link 'header'}}</li>
+	<li>{{-link 'env'}}</li>
+	<li>{{-link 'method'}}</li>
+	<li>{{-link 'multipart'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2><b>Signal:</b> Request</h2>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		
+		<!-- Signal Request -->
+		<li>{{-link 'url', '$.url'}}</li>
+		<li>{{-link 'query', '$.query'}}</li>
+		<li>{{-link 'params', '$.params'}}</li>
+		<li>{{-link 'body', '$.body'}}</li>
+		<li>{{-link 'headers', '$.headers'}}</li>
+		<li>{{-link 'header', '$.header'}}</li>
+		<li>{{-link 'env', '$.env'}}</li>
+		<li>{{-link 'method', '$.method'}}</li>
+		<li>{{-link 'multipart', '$.multipart'}}</li>
+	</ul>
+</div>
+
+<!-- INTRO -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro</h2>
+	<p>Node.js by default has two arguments <b>request</b> and <b>response</b> when creating a HTTP(s) server using <i>http.createServer()</i>. Diet combines these two objects into a single <b>Signal Object</b> defined as a dollar sign <b>$</b></p>
+	<br>
+	<p>This document describes the Signal Methods that are inherited from the <i>Request Object</i>.</p>
+</div>
+
+<!-- URL -->
+<div data-section="url" class="section wrap">
+	<h2>{{-link 'url', '#'}} $.url <span class="attribute type">Object</span></h2>
+	<p>JSON Parsed <i>request.url</i>.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">protocol</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The request/response protocol. It can be <i>http:</i> or <i>https:</i></p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">host</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The complete host of the requested resource including the port. It is the same as <i>app.location.host</i></p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">hostname</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The hostname of the requested resource exlucding the port. It is the same as <i>app.location.hostname</i></p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">port</span> 
+			<span class="type">integer</span> 
+		</h4>
+		<p>The port. It is the same as <i>app.location.port</i></p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">href</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The full requested URL</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">path</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>Everything after the host including the querystring.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">pathname</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>Everything after the host excluding the querystring.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /user/:id
+app.get('/', function($){
+    console.log($.url)
+    $.end()
+})
+
+// The above console.log outputs the following object 
+// when the path http://localhost:8000/ is requested.
+{  protocol: 'http:',
+   slashes: true,
+   host: 'localhost:8000',
+   hostname: 'localhost',
+   href: 'http://localhost:8000/',
+   pathname: '/',
+   path: '/'  }
+</pre></div>
+
+<!-- QUERY -->
+<div data-section="query" class="section wrap">
+	<h2>{{-link 'query', '#'}} $.query <span class="attribute type">Object</span></h2>
+	<p>JSON parsed querystring from <i>request.url</i>.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /
+app.get('/', function($){
+    console.log($.query)
+    $.end()
+})
+
+// The above console.log outputs the following object 
+// when the following path is requested: 
+// GET http://localhost:8000/?string=hello&amp;array=1&amp;array=2&amp;boolean=true 
+{  string: 'hello',
+   array: [1,2],
+   boolean: true  }
+</pre></div>
+
+<!-- PARAMS -->
+<div data-section="params" class="section wrap">
+	<h2>{{-link 'params', '#'}} $.params <span class="attribute type">Object</span></h2>
+	<p>URL params from dynamic page routes like <i>/user/:id</i>.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /user/:id
+app.get('/user/:id', function($){
+    console.log($.params)
+    $.end()
+})
+
+// The above console.log outputs the following object 
+// when the following path is requested: 
+// GET http://localhost:8000/user/10 
+{ id: 10 }
+</pre></div>
+
+<!-- BODY -->
+<div data-section="body" class="section wrap">
+	<h2>{{-link 'body', '#'}} $.body <span class="attribute type">Object</span> <span class="attribute type">POST only</span></h2>
+	<p>JSON Parsed post body.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on POST /user/create
+app.post('/user/create', function($){
+    console.log($.body)
+    $.end()
+})
+
+// The above console.log outputs the following object 
+// when this path is requested "POST http://localhost:8000/user/create"
+// with the encoded body: "Name=Jonathan+Doe&amp;Age=23&amp;Formula=a+%2B+b+%3D%3D+13%25%21"
+{  name: 'Johnathan Doe',
+   age: 23, 
+   Formula: 'a + b == 13%!' }
+</pre></div>
+
+<!-- HEADERS -->
+<div data-section="headers" class="section wrap">
+	<h2>{{-link 'headers', '#'}} $.headers <span class="attribute type">Object</span></h2>
+	<p>An object of all headers.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /
+app.get('/', function($){
+    console.log($.headers) 
+})
+
+// The above console.log outputs the following object 
+{ host: 'localhost:8000',
+  connection: 'keep-alive',
+  accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+  'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36',
+  'accept-encoding': 'gzip,deflate,sdch',
+  'accept-language': 'en-US,en;q=0.8,da;q=0.6,hu;q=0.4',
+  cookie: 'id=999' }
+  
+</pre></div>
+
+<!-- HEADER -->
+<div data-section="header" class="section wrap">
+	<h2>{{-link 'header', '#'}} $.header(<i>name</i>, <i>value</i>) <span class="attribute type">Function</span></h2>
+	<p>Get or Set Headers. The second argument is for SET, if left empty it's GET.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">name</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The name of the header.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">value</span> 
+			<span class="type">string</span> 
+			<span class="type">optional</span> 
+		</h4>
+		<p>Set the value of the header named by the <i>name</i> attribute.</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /
+app.get('/', function($){
+    $.header('cookie') // GET `cookie` -> 'id=999'
+    $.header('content-type', 'text/html') // SET `content-type` to `text/html`
+})
+  
+</pre></div>
+
+<!-- ENV -->
+<div data-section="env" class="section wrap">
+	<h2>{{-link 'env', '#'}} $.env <span class="attribute type">Boolean</span></h2>
+	<p>Shortcut for <i>process.env.NODE_ENV</i></p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /
+app.get('/', function($){
+    if($.env == 'development'){
+    	$.end('development mode');
+    } else {
+    	$.end('production mode');
+    }
+})
+</pre></div>
+
+<!-- METHOD -->
+<div data-section="method" class="section wrap">
+	<h2>{{-link 'method', '#'}} $.method <span class="attribute type">String</span></h2>
+	<p>Shortcut for <i>request.method</i>. It can be <i>GET</i> or <i>POST</i>. It is mostly useful in middleware functions.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+app.get('/', function($){
+    console.log($.method) // -> get
+})
+
+app.post('/', function($){
+    console.log($.method) // -> post
+})
+</pre></div>
+
+<!-- MULTIPART -->
+<div data-section="multipart" class="section wrap">
+	<h2>{{-link 'multipart', '#'}} $.multipart <span class="attribute type">Boolean</span></h2>
+	<p>Shortcut for <i>request.method</i>. It can be <i>GET</i> or <i>POST</i>. It is mostly useful in middleware functions.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+app.post('/', function($){
+    if($.multipart){
+    	// parse multipart form data	
+    } else {
+    	// just use $.body
+    }
+})
+</pre></div>
+
+	

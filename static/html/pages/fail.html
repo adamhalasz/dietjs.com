@@ -1,0 +1,9 @@
+<div class="section wrap">
+	{{include 'parts/logo'}}
+</div>
+
+<div class="section wrap">
+	<h2>Oups, something went wrong.</h2>
+	<h3>{{-this.statusCode}} {{-this.statusMessage}}</h3>
+	{{-this.fail.template}}
+</div>

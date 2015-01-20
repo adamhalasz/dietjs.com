@@ -1,0 +1,32 @@
+{{page = this.page}}
+{{subpage = this.subpage}}
+
+{{link = (href, text, linkPage, linkSubpage) ->}}
+	<li><a href="{{-href}}" class="link {{-if linkPage+linkSubpage is page+subpage then 'selected'}}">{{-text}}</a></li>
+{{end}}
+
+<div id="sidebar">
+	
+	<h3>Tutorials</h3>
+	<ul>
+		{{-link '/tutorials/get_started', '1) Get Started', 'tutorial', 'get_started'}}
+		{{-link '/tutorials/host', '2) Hosting', 'tutorial', 'host'}}
+		{{-link '/tutorials/router', '3) Routing', 'tutorial', 'router'}}
+		{{-link '/tutorials/signal', '4) Signal', 'tutorial', 'signal'}}
+		{{-link '/tutorials/modules', '5) Modules', 'tutorial', 'modules'}}
+	</ul>
+	
+	<h3>API</h3>
+	<ul>
+		{{-link '/api/server', 'Server', 'api', 'server'}}
+		{{-link '/api/signal/request', 'Signal: Request', 'api', 'signal_request'}}
+		{{-link '/api/signal/response', 'Signal: Response', 'api', 'signal_response'}}
+	</ul>
+	
+	<h3>Resources</h3>
+	<ul>
+		{{-link '/resources/modules', 'Official Modules', 'resource', 'modules'}}
+		{{-link '/resources/comparison', 'Tests & Benchmarks', 'resource', 'comparison'}}
+		<!--{{-link '/resources/showcase', 'App Showcase', 'resource', 'showcase'}}-->
+	</ul>
+</div>

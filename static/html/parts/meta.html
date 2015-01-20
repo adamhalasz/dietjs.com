@@ -1,0 +1,12 @@
+{{this.meta = (options) ->}}
+	<div class="meta">
+		<div class="info levels">
+			<div class="label">level:</div>
+			{{for num in [1..5]:}}<div class="level {{-if options.level >= num then 'selected'}}"></div>{{end}}
+		</div>
+		<div class="info duration">
+			<div class="label">duration:</div>
+			<div class="value">{{-options.duration}}</div>
+		</div>
+	</div>
+{{end}}

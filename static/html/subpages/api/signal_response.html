@@ -1,0 +1,404 @@
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro'}}</li>
+	
+	<!-- Signal Response -->
+	<li>{{-link 'end'}}</li>
+	<li>{{-link 'send'}}</li>
+	<li>{{-link 'header'}}</li>
+	<li>{{-link 'data'}}</li>
+	<li>{{-link 'status'}}</li>
+	<li>{{-link 'redirect'}}</li>
+	<li>{{-link 'json'}}</li>
+	<li>{{-link 'success'}}</li>
+	<li>{{-link 'failure'}}</li>
+	<li>{{-link 'error'}}</li>
+	<li>{{-link 'errors'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2><b>Signal:</b> Response</h2>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		
+		<!-- Signal Response -->
+		<li>{{-link 'end', '$.end'}}</li>
+		<li>{{-link 'send', '$.send'}}</li>
+		<li>{{-link 'header', '$.header'}}</li>
+		<li>{{-link 'data', '$.data'}}</li>
+		<li>{{-link 'status', '$.status'}}</li>
+		<li>{{-link 'redirect', '$.redirect'}}</li>
+		<li>{{-link 'json', '$.json'}}</li>
+		<li>{{-link 'success', '$.success'}}</li>
+		<li>{{-link 'error', '$.failure'}}</li>
+		<li>{{-link 'error', '$.error'}}</li>
+		<li>{{-link 'errors', '$.errors'}}</li>
+	</ul>
+</div>
+
+<!-- INTRO -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro</h2>
+	<p>Node.js by default has two arguments <b>request</b> and <b>response</b> when creating a HTTP(s) server using <i>http.createServer()</i>. Diet combines these two objects into a single <b>Signal Object</b> defined as a dollar sign <b>$</b></p>
+	<br>
+	<p>This document describes the Signal Methods that are inherited from the <i>Response Object</i>.</p>
+</div>
+
+<!-- END -->
+<div data-section="end" class="section wrap">
+	<h2>{{-link 'end', '#'}} $.end(<i>data</i>) <span class="attribute type">Function</span></h2>
+	<p>A function that ends the response and send back data to the requesting device.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">data</span> 
+			<span class="type">string</span> 
+			<span class="sep">or</span> 
+			<span class="type">object</span>
+			<span class="sep">or</span> 
+			<span class="type">buffer</span>
+			<span class="sep">or</span> 
+			<span class="type">integer</span>
+		</h4>
+		<p>The message to respond with to the client.</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "Hello world!"
+app.get('/', function($){
+   $.end('Hello world!')
+})
+</pre></div>
+
+<!-- SEND -->
+<div data-section="send" class="section wrap">
+	<h2>{{-link 'send', '#'}} $.send(<i>data</i>) <span class="attribute type">Function</span></h2>
+	<p>A function that writes to the response stream.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">data</span> 
+			<span class="type">string</span> 
+			<span class="sep">or</span> 
+			<span class="type">object</span>
+			<span class="sep">or</span> 
+			<span class="type">buffer</span>
+			<span class="sep">or</span> 
+			<span class="type">integer</span>
+		</h4>
+		<p>The message to respond with to the client.</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "Hello world!"
+app.get('/', function($){
+   $.send('Hello ')
+   $.send(' world!')
+   $.end()
+})
+</pre></div>
+
+<!-- HEADER -->
+<div data-section="header" class="section wrap">
+	<h2>{{-link 'header', '#'}} $.header(<i>name</i>, <i>value</i>) <span class="attribute type">Function</span></h2>
+	<p>Get or Set Headers. The second argument is for SET, if left empty it's GET.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">name</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The name of the header.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">value</span> 
+			<span class="type">string</span> 
+			<span class="type">optional</span> 
+		</h4>
+		<p>Set the value of the header named by the <i>name</i> attribute.</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET /
+app.get('/', function($){
+    $.header('cookie') // GET `cookie` -> 'id=999'
+    $.header('content-type', 'text/html') // SET `content-type` to `text/html`
+})
+  
+</pre></div>
+
+<!-- DATA -->
+<div data-section="data" class="section wrap">
+	<h2>{{-link 'data', '#'}} $.data <span class="attribute type">Object</span></h2>
+	<p>Response data used by <i>$.json()</i> responses and <i>template engines</i> for <i>html</i>, <i>email</i> etc.</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "index.html"
+app.get('/', function($){
+   $.data.hello = 'world'
+   $.json()
+})
+
+// when "GET http://localhost:8000/user/create" is requested
+// the response is the following:
+{ "hello": "world" }
+</pre></div>
+
+<!-- STATUS -->
+<div data-section="status" class="section wrap">
+	<h2>{{-link 'status', '#'}} $.status(<i>code</i>, <i>message</i>) <span class="attribute type">Function</span></h2>
+	<p>Set the status of the response message.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">code</span> 
+			<span class="type">integer</span> 
+		</h4>
+		<p>Status Code. Sets <i>$.statusCode</i></p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">message</span> 
+			<span class="type">string</span> 
+			<span class="type">optional</span> 
+		</h4>
+		<p>Optional Status Message. Sets <i>$.statusMessage</i></p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "index.html"
+app.get('/', function($){
+   $.status('404', 'Page Not Found')
+   $.end($.statusCode + ' ' + $.statusMessage) // 404 Page Not Found
+})
+</pre></div>
+
+<!-- REDIRECT -->
+<div data-section="redirect" class="section wrap">
+	<h2>{{-link 'redirect', '#'}} $.redirect(<i>path</i>, <i>statusCode</i>) <span class="attribute type">Function</span></h2>
+	<p>Redirect the request to a different Path or URL.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">path</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>Redirect to this Path or URL.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">statusCode</span> 
+			<span class="type">integer</span> 
+			<span class="type">optional</span> 
+		</h4>
+		<p>Optional Status Code.</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// internal redirect 
+app.get('/one', function($){
+   $.redirect('/to/some/path') 
+})
+
+// external redirect
+app.get('/two', function($){
+   $.redirect('http://google.com/')
+})
+
+// redirect home
+app.get('/three', function($){
+   $.redirect('home') 
+})
+
+// redirect back
+app.get('/four', function($){
+   $.redirect('back') 
+})
+</pre></div>
+
+<!-- JSON -->
+<div data-section="json" class="section wrap">
+	<h2>{{-link 'json', '#'}} $.json(<i>data</i>) <span class="attribute type">Function</span></h2>
+	<p>End a response with a JSON Object. Inherits the properties of <i>$.data</i></p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">data</span> 
+			<span class="type">object</span> 
+		</h4>
+		<p>the json object</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with a JSON Object
+app.get('/', function($){
+   $.json({ hello: 'world' }) // outputs: { hello: 'world' }
+})
+</pre></div>
+
+<!-- SUCCESS -->
+<div data-section="success" class="section wrap">
+	<h2>{{-link 'success', '#'}} $.success() <span class="attribute type">Function</span></h2>
+	<p>End a response with a JSON Object. Sets <i>$.data.passed</i> and <i>$.passed</i> to <i>true</i>. Inherits the properties of <i>$.data</i></p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with a JSON Object
+app.get('/', function($){
+   $.success() // outputs: { passed: true }
+})
+</pre></div>
+
+<!-- ERROR -->
+<div data-section="failure" class="section wrap">
+	<h2>{{-link 'failure', '#'}} $.failure() <span class="attribute type">Function</span></h2>
+	<p>End a response with a JSON Object. Sets <i>$.data.passed</i> and <i>$.passed</i> to <i>false</i>. Inherits the properties of <i>$.data</i></p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "index.html"
+app.get('/myPath', function($){
+   if(1+1 == 3){
+       $.failure()
+   } 
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// when "GET http://localhost:8000/myPath" is requested the response is:
+{ passed: false }
+</pre></div>
+
+
+<!-- ERROR -->
+<div data-section="error" class="section wrap">
+	<h2>{{-link 'error', '#'}} $.error(<i>field</i>, <i>message</i>) <span class="attribute type">Function</span></h2>
+	<p>Register an error into <i>$.errors</i>. Sets <i>$.data.passed</i> and <i>$.passed</i> to <i>false</i>.</p>
+	<div class="attribute">
+		<h4>
+			<span class="label">field</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>the error index</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">message</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>the error message</p>
+	</div>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "index.html"
+app.get('/myPath', function($){
+   $.error('myField', 'invalid value')
+   $.failure()
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// when "GET http://localhost:8000/myPath" is requested the response is:
+{ passed: false, errors: { myField: 'invalid value' } }
+</pre></div>
+
+
+<!-- ERRORS -->
+<div data-section="errors" class="section wrap">
+	<h2>{{-link 'errors', '#'}} $.errors <span class="attribute type">Object</span></h2>
+	<p>If not empty it is appended to <i>$.data</i> as <i>$.data.errors</i></p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Listen on GET / and respond with "index.html"
+app.get('/', function($){
+   $.errors.myField = 'invalid value'
+   $.failure()
+})
+
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// when "GET http://localhost:8000/myPath" is requested the response is:
+{ passed: false, errors: { myField: 'invalid value' } }
+</pre></div>
+
+

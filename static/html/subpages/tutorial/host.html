@@ -1,0 +1,137 @@
+{{include 'parts/meta'}}
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro', 'Intro'}}</li>
+	<li>{{-link 'server', 'Server Instances'}}</li>
+	<li>{{-link 'http', 'Create HTTP Instances'}}</li>
+	<li>{{-link 'https', 'Create HTTPS Instances'}}</li>
+	<li>{{-link 'backend', 'Backend'}}</li>
+	<li>{{-link 'next', 'What\'s next?'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2>Hosting</h2>
+	{{-this.meta level: 2, duration: '15 minutes'}}
+	<br>
+	<h3>Table of Contents</h3>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		<li>{{-link 'server', 'Server Instances'}}</li>
+		<li>{{-link 'http', 'Create HTTP Instances'}}</li>
+		<li>{{-link 'https', 'Create HTTPS Instances'}}</li>
+		<li>{{-link 'backend', 'More about backend Development'}}</li>
+		<li>{{-link 'next', 'What\'s next?'}}</li>
+	</ul>
+</div>
+
+<!-- Intro -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro</h2>
+	<p>The purpose of this document is to you give a general overview about the basics of backend development, the structure of the internet and how can you create web servers with Diet's Server Instances.</p>
+</div>
+
+<!-- SERVER INSTANCES -->
+<div data-section="server" class="section wrap">
+	<h2>{{-link 'server', '#'}} Server Instances</h2>
+	<p>In comparison to many other web frameworks diet has a structure that supports <a href="<a href=http://en.wikipedia.org/wiki/Virtual_hosting" target="_blank">virtual hosting</a> without any additional modules or configuration. Diet has Server Instances that function as virtual hosts. 
+	<br><br>
+	<p>Virtual hosting is a method for hosting multiple domain names (with separate handling of each name) on a single server (or pool of servers). This allows one server to share its resources, such as memory and processor cycles, without requiring all services provided to use the same host name.</p>
+	<br>
+	<p>Server Instances are created by calling the <i>server()</i> function. They have <a href="/api/server">a few methods listed in the Server API</a>. You can set the hostname with the <i>listen</i> method as you can see on the examples below. You will see server instances defined as <i>app</i>'s in the example snippets.</p>
+</div>
+
+<!-- CREATE INSTANCES -->
+<div data-section="http" class="section wrap">
+	<h2>{{-link 'http', '#'}} Create HTTP Instances</h2>
+	<p>The code below creates 2 Server Instances that listen on <i>http://localhost:8000/</i> and another one on <i>http://localhost:9000</i>. We register a <a href="/tutorials/router">route</a> on the "GET /" path for both instances and they respond with different messages.</p>
+</div>
+<div class="code"><pre class="prettyprint wrap">
+// Require diet
+var server = require('diet')
+
+// Create Server Instance 1
+var app = server()
+app.listen('http://localhost:8000/')
+app.get('/', function($){ 
+    $.end('welcome to my website') 
+})
+
+// Create Server Instance 2
+var app2 = server()
+app2.listen('http://localhost:9000/')
+app2.get('/', function($){ 
+    $.end('welcome to my mobile api') 
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+curl "http://localhost:9000/"
+# -> welcome to my website"
+	
+curl "http://localhost:9000/"
+# -> welcome to my mobile api"
+</pre></div>
+
+<!-- HTTPS -->
+<div data-section="https" class="section wrap">
+	<h2>{{-link 'https', '#'}} Create HTTPS Instances</h2>
+	<p>You can switch to <a href="http://en.wikipedia.org/wiki/HTTP_Secure" target="_blank">HTTPS</a> by changing http to https in the location attribute when you call the listen method. When you are using https as the protocol, you need to pass the source for the certificate files in the second argument of the listen method.</p>
+</div>
+<div class="code"><pre class="prettyprint wrap">
+// Create Secure Server Instance
+var app = server()
+app.listen('https://localhost:9000/', {
+   cert: 'cert.key',
+   key: 'key.key'
+})
+</pre></div>
+
+<!-- Backend Development -->
+<div data-section="backend" class="section wrap">
+	<h2>{{-link 'backend', '#'}} More about Backend Development</h2>
+	<h3>IP Address <span class="silver">(Internet Protocol Address)</span></h3>
+	<p>Every computer joins to the internet with an unique identifier, similar to government issued IDs. A computer's id is called an <a href="http://en.wikipedia.org/wiki/IP_address" target="_blank">IP Address</a>.
+	<br><br>
+	
+	<h3>The Client and the Server</h3>
+	<p>The <a href="http://en.wikipedia.org/wiki/Client%E2%80%93server_model" target="_blank">client and the server</a> are both computers that communicate with each other. The client is a computer that requests information from an another computer. The server is a computer that responds to an other computer that sends the request.</p>
+	<br><br>
+	
+	<h3>URL <span class="silver">(Uniform Resource Locator)</span></h3>
+	<p>The <a href="http://en.wikipedia.org/wiki/Uniform_resource_locator" target="_blank">URL</a> is used by a client computer to request information located on a different computer that we call a server. The URL contains informations that tells the server what is the client looking for on that server.
+	<br><br>
+	
+	<h3>Hostnames &amp; DNS <span class="silver">(Domain Name System)</span></h3>
+	<p>Hostnames have the same purpose as IP addresses but they are more human readable, easier to type and remember. Hostnames however need to be translated to IP addresses and that's why we need the <a href="http://en.wikipedia.org/wiki/Domain_Name_System" target="_blank">Domain Name System</a>. </p>
+	<br>
+	<p>Lets's see what happens when you type in <i>http://google.com/</i> in your browser: </p>
+	<br>
+	<img src="/images/internet.png" width="744.5"  alt="Internet"/>
+	<br><br>
+	<ol>
+		<li>Your computer contacts your <a href="http://en.wikipedia.org/wiki/Internet_service_provider" target="_blank">ISP</a> (Internet Service Provider)</li>
+		<li>Your ISP uses the <a href="en.wikipedia.org/wiki/Domain_Name_System" target="_blank">Domain Name System</a> to find the IP behind google.com</li>
+		<li>Your ISP contacts the <a href="http://en.wikipedia.org/wiki/Web_server" target="_blank">Web Server</a> behind <a href="http://195.13.231.178/" target="_blank">http://195.13.231.178/</a> over the <a href="http://en.wikipedia.org/wiki/Internet">Internet</a></li>
+		<li>The Web Server processes and <a href="http://en.wikipedia.org/wiki/Request%E2%80%93response" target="_blank"> responds to your request</a> with a message</li>
+		<li>The response message is sent back to the Internet, then to your ISP and finally back to your computer</li>
+		<li>Your computer processes and displays the message from the server</li>
+	</ol>
+</div>
+
+<!-- NEXT -->
+<div data-section="next" class="section wrap">
+	<h2>{{-link 'next', '#'}} What's next?</h2>
+	<p>Congrats! Now you know what are Virtual Hosts, how to create Server Instances and how your computer requested this page from my server to display it on your screen.</p>
+	<br>
+	<p> It's time to learn how to <a href="/tutorials/router">Route Pages</a> within your web server.</p>
+</div>

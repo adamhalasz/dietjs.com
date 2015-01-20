@@ -1,0 +1,362 @@
+{{include 'parts/meta'}}
+{{link = (text, innerHTML) -> }}<a class="toc-link" href="#{{-text}}">{{-if innerHTML then innerHTML else text}}</a>{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro', 'Intro'}}</li>
+	<li>{{-link 'logic', 'logic'}}</li>
+	<li>{{-link 'types', 'types'}}</li>
+	<li>{{-link 'middleware', 'middleware'}}</li>
+	<li>{{-link 'dynamic', 'Dynamic'}}</li>
+	<li>{{-link 'get', 'GET'}}</li>
+	<li>{{-link 'post', 'POST'}}</li>
+	<li>{{-link 'header', 'Header'}}</li>
+	<li>{{-link 'footer', 'Footer'}}</li>
+	<li>{{-link 'missing', 'Missing'}}</li>
+	<li>{{-link 'error', 'Error'}}</li>
+	<li>{{-link 'next', 'What\'s next?'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2>Routing</h2>
+	{{-this.meta level: 3, duration: '30 minutes'}}
+	<br>
+	<h3>Table of Contents</h3>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		<li>{{-link 'logic', 'The Request Response Logic'}}</li>
+		<li>{{-link 'types', 'The 6 Type of Routes'}}</li>
+		<li>{{-link 'middleware', 'Middleware'}}</li>
+		<li>{{-link 'dynamic', 'Dynamic Routes'}}</li>
+		<li>{{-link 'get', 'GET Routes'}}</li>
+		<li>{{-link 'post', 'POST Routes'}}</li>
+		<li>{{-link 'header', 'Header Routes'}}</li>
+		<li>{{-link 'footer', 'Footer Routes'}}</li>
+		<li>{{-link 'missing', 'Missing Routes'}}</li>
+		<li>{{-link 'error', 'Error Routes'}}</li>
+		<li>{{-link 'next', 'What\'s next?'}}</li>
+	</ul>
+</div>
+
+<!-- INTRO -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro to Routes</h2>
+	<p>Routing is the process of selecting best paths in a network. Routes are usually symbols to handler functions or middlewares but they can also lead to physical files or errors.</p>
+</div>
+
+<!-- REQUEST RESPONSE -->
+<div data-section="logic" class="section wrap">	
+	<h2>{{-link 'logic', '#'}} The Request Response Logic</h2>
+	<p>Request–response or request–reply is one of the basic methods computers use to communicate to each other. When using request–response, the first computer sends a request for some data and the second computer responds to the request.</p>
+	<br>
+	<p>Usually there is a series of such interchanges until the complete message is sent. Browsing a web page is an example of request–response communication. You can think of request–response as being like a telephone call, where you call someone and they answer the call.</p>
+	<br>
+	<p>The call initiates a routing process in the server that runs handler functions that has been associated with that route. The handler functions are like valets with specific instructions (functions) assigned to work at specific locations (paths). There job is to move the data in the right direction.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/path is requested, respond with "Hello world!"
+    app.get('/path', function($){
+        $.end('Hello world!')
+    })
+	</pre></div>
+	<br>
+	<img src="/images/request-response.png" width="744.5" height="432.5" alt="request-response in diet"/>
+
+</div>
+<div data-section="types" class="section wrap">	
+	<h2>{{-link 'types', '#'}} The 6 Type of Routes</h2>
+	<br>
+	<h3>Path Specific Routes</h3>
+	<p>{{-link 'get', 'GET'}} and {{-link 'POST'}} routes are <i>path specific</i>, they can be created by defining a URL pattern and specifying a function that handles incoming requests that match that pattern.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    function handlerFunction($){
+    	$.end('Hello world!')
+    }
+    
+    app.get('/pathPattern', handlerFunction)
+	</pre></div>
+	<br>
+	<br>
+	<h3>Global Routes</h3>
+	<p>{{-link 'header', 'Header'}}, {{-link 'footer'}}, {{-link 'missing'}} and {{-link 'error'}} routes are <i>global</i>. They also have handler functions but we call them <i>{{-link 'middlewares'}}</i> because they are usually called at different stages of the routing process.</p>
+	<br>
+	<p>Global routes don't need a pattern because they are not triggered by matching URL Paths. Headers and footers are called for every route, missing routes are called when there was no route found and error routes are called when an unexpected error happened in any of the routes.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    function middlewareFunction($){
+        $.return() // or $.end()
+    }
+
+    app.header(middlewareFunction)
+	</pre></div>
+</div>
+
+<!-- MIDDLEWARE ROUTES -->
+<div data-section="middleware" class="section wrap">
+	<h2>{{-link 'middleware', '#'}} Middleware</h2>
+	<p>The concept of middleware can be confusing sometimes, but don't worry it's actually quite simple. It's just a bunch of functions or even programs linked together. The "middleware layer" is the link itself, the chain that connects functions.
+	</p>
+	<blockquote>
+		Some real-life examples that are similar in concept to middleware are electric cables in a city, railroads in a country, the plumbing in a house, a bridge between mountains, or a river's stream. 
+	</blockquote> 
+
+	<p>A practical example in our case is <i>image uploading</i> because it involves uploading, cropping and saving data into a database. These operations use 3 distinct applications, <a href="https://github.com/felixge/node-formidable">formidable</a>, <a href="http://www.graphicsmagick.org/">graphicsmagick</a> and <a href="http://www.mongodb.com">mongodb</a> and with routing we can connect them together by registering middleware functions for the route.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // Register middleware functions for the upload path
+    app.post('/upload/picture', upload, crop, save, finish) 
+	
+    // upload with formidable
+    function upload($){
+        var form = new formidable.IncomingForm();
+        form.parse($.request, function(err, fields, files) {
+            $.data.file = files[0]
+            $.return();
+        });
+    }
+    
+    // crop with graphicsmagick
+    function crop($){
+        gm($.data.file.source)
+        .resize(200, 200)
+        .autoOrient()
+        .write(writeStream, function (err) {
+            if (error) throw error
+            $.return()
+        });
+    }
+    
+    // save to mongodb
+    function save($){
+        db.pictures.save($.data.file, function(error, row){
+            if (error) throw error
+            $.data.file.row = row
+            $.return()
+        })
+    }
+    
+    // send json response
+    function finish($){
+        $.success()
+    }
+    </pre></div>
+    <br>
+    <p>As you can see the contents of these individual functions actually could be inside a single function too. The reason we separate operations into Objects and Functions is to create modular systems. It is a good practice because smaller chunks of code can be managed more effectively and allows to use other peoples code in ours with much less effort.</p>
+</div>
+
+<!-- DYNAMIC ROUTES -->
+<div data-section="dynamic" class="section wrap">
+	<h2>{{-link 'dynamic', '#'}} Dynamic Routes</h2>
+	<br>
+	<p>You can also use routing to generate dynamic URLs in your application. If you have 1,000 users you probably don't want to create a file or route for all of them, that's where dynamic routing comes handy. 
+	<br><br>
+	You can define a pattern such as <i>:username</i> in the route's path and access it with <i>$.params.username</i> as you can see on the example below:</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // Visiting "http://example.com/user/john" should return:
+    // "The requested user is john"
+    app.get('/user/:username', function($){
+        $.end('The requested user is ' + $.params.username) 
+    }) 
+    </pre></div>
+</div>
+
+<!-- GET -->
+<div data-section="get" class="section wrap">
+	<h2>{{-link 'get', '#'}} GET Routes</h2>
+	<br>
+	<h3>What is GET?</h3>
+	<p>GET is <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">one of the HTTP methods</a> that describe the way the request should be handled. You can imagine it like a file extension that describes a  compression type like PNG or JPEG.</p>
+	<br><br>
+	
+	<h3>When to use the GET Method?</h3>
+	<p>The GET is used for viewing something, without changing it, while POST is used for changing something. For example, a search page should use GET, while a form that changes your password should use POST.</p>
+	<br><br>
+	<div class="code"><pre class="prettyprint">
+    // When "http://example.com/search/Batman" is requested
+    app.get('/search/:query', function($){
+    	// Look for articles in the database with a title "Batman"
+        db.articles.find({ title: $.params.query }, function(error, articles){
+            // Show errors if there is any
+            if(error) throw error      
+            
+            // Append articles to data object for json response
+            $.data.articles = articles 
+            
+            // Respond with an array of articles
+            // { articles: [{ id:1, title: "Batman", content: "hello world!" }] }
+            $.json()                   
+        })
+    }) 
+	</pre></div>
+	<br>
+	<br>
+	<h3>Caching GET Responses</h3>
+	<p>The response to a <i>GET request is cacheable</i> if and only if it meets the requirements for HTTP caching described in <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html">RFC 2616 Section 13</a></p>
+</div>
+
+<!-- POST -->
+<div data-section="post" class="section wrap">
+	<h2>{{-link 'post', '#'}} POST Routes</h2>
+	<br>
+	<h3>What is POST?</h3>
+	<p>POST is <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">one of the HTTP methods</a> that describe the way the request should be handled. You can imagine it like a file extension that describes a  compression type like PNG or JPEG.</p>
+	<br><br>
+	
+	<h3>When to use the POST Method?</h3>
+	<p>The POST is used for any change like creating, updating, saving or deleting something. For example, a search page should use GET, while a form that changes your password should use POST. Since the response of POST requests are not cached by default it's  also used for authorization, authentication, payments etc.</p>
+	<br><br>
+	<div class="code"><pre class="prettyprint">
+    // When "POST http://example.com/settings/changePassword" is requested
+    app.post('/settings/changePassword', function($){
+    	// Change the session user's password
+        db.accounts.update({ 
+            "accountId": $.session.id, 
+            "password": $.body.newPassword 
+        }, function(error, articles){
+            if(error) {
+            	// Show errors if there is any
+            	throw error
+            } else {
+            	// Respond with a success object: { passed: true }
+            	$.succces()  
+            }           
+        })
+    }) 
+	</pre></div>
+	<br>
+	<br>
+	<h3>Caching POST Responses</h3>
+	<p>Responses to this method are not cacheable, unless the response includes appropriate Cache-Control or Expires header fields. However, the 303 (See Other) response can be used to direct the user agent to retrieve a cacheable resource as described in <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">RFC 2616 Section 9.5</a></p>
+</div>
+
+<!-- HEADER -->
+<div data-section="header" class="section wrap">
+	<h2>{{-link 'header', '#'}} Header Routes</h2>
+	<br>
+	<h3>What is a Header Route?</h3>
+	<p>Header routes allow to register callbacks for every route. They are global middlewares. Headers are emitted <i>before any other route</i> and after the signal was constructed. It can be used to prepend informations to the signal like reading cookies and session information from the request headers.</p>
+	<br><br>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    app.header(function($){
+    	$.name = 'john'
+    	$.return()
+    })
+    
+    app.get('/', function($){
+    	$.end('hello' + $.name) // -> hello john
+    })
+    
+    app.get('/other', function($){
+    	$.end('hello other' + $.name) // -> hello other john
+    })
+	</pre></div>
+</div>
+
+<!-- HEADER -->
+<div data-section="footer" class="section wrap">
+	<h2>{{-link 'footer', '#'}} Footer Routes</h2>
+	<br>
+	<h3>What is a Footer Route?</h3>
+	<p>Footer routes allow to register callbacks for every route. They are global middlewares. Footers are emitted <i>after all the other routes</i> but before <i>response.end</i> was called. It can be used to handle static files etc.</p>
+	<br><br>
+	
+	<div class="code"><pre class="prettyprint">
+    app.footer(function($){
+    	$.name = 'john'
+    	$.return()
+    })
+    
+    app.get('/', function($){
+    	$.end('hello' + $.name) // -> hello john
+    })
+    
+    app.get('/other', function($){
+    	$.end('hello other' + $.name) // -> hello other john
+    })
+	</pre></div>
+</div>
+
+<!-- MISSING -->
+<div data-section="missing" class="section wrap">
+	<h2>{{-link 'missing', '#'}} Missing Routes</h2>
+	
+	<h3>What is a Missing Route?</h3>
+	<p>Missing routes are called when a request's URL doesn't map to any physical File nor to a Route. You can use this route to create user friendly 404 Not Found pages.</p>
+	<br>
+	
+	<div class="code"><pre class="prettyprint">
+    app.missing(function($){
+    	$.end('My Custom 404 Not Found Page')
+    })
+	</pre></div>
+	<br><br>
+	<h3>Can I use middlewares?</h3>
+	<p>Yes of course! It works just like any other Route. You can easily attach session data, notifications and anything you want to your missing views.</p>
+	<br>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // middlewares
+    function session($){ /* ... */ }
+    
+    // Sorry John! The page was not found.
+    app.missing(session, function($){
+    	$.end('Sorry '+ $.session.name +'! The page was not found.')
+    })
+	</pre></div>
+</div>
+
+<!-- Error -->
+<div data-section="error" class="section wrap">
+	<h2>{{-link 'error', '#'}} Error Routes</h2>
+	<br>
+	<h3>What is an Error Route?</h3>
+	<p>An error route is used to catch and handle unexpected errors in your routes. </p>
+	<br>
+	
+	<h3>When to use Error Routes?</h3>
+	<p>When there is an Error in one of the routes or middlewares the response is finished with a default error message including the reason for the error and a <a href="http://en.wikipedia.org/wiki/Stack_trace" target="_blank">stack trace</a>.</p>
+	<br>
+	<p>While the default error message is useful when you're developing and debugging, it's not a good practice, and not safe to display error messages in production. With the <i><a href="/api/server#app.error">app.error()</a></i> route you can display a custom user friendly Internal Server Error message.</p>
+	<br><br>
+	<div class="code"><pre class="prettyprint">
+    app.error(function($){
+    	// Throw error message without shutting down the node process
+    	console.throw($.fail.error)
+    	
+    	// Display Error Message to the client: 
+    	// 500
+    	// Internal Server Error 
+    	// Unexpected variable "hello" at index.js:3:4 
+    	$.end($.statusCode + '\n' +  $.statusMessage + '\n' +  $.fail.error.message)
+    })
+	</pre></div>
+	<br><br>
+	<h3>Can I use middlewares?</h3>
+	<p>Yes you can! It works just like any other Route. You can easily attach session data, notifications and anything you want to your error views.</p>
+	<br>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // Example Middleware
+    function session($){ /* ... */ }
+    
+    // Display "Sorry John, something went wrong."
+    app.error(session, function($){
+    	$.end('Sorry ' + $.session.name + ', something went wrong.')
+    })
+	</pre></div>
+</div>
+
+<!-- INTRO -->
+<div data-section="next" class="section wrap">
+	<h2>{{-link 'next', '#'}} What's next?</h2>
+	<p>Congratulations! Now you know how to route pages, use middlewares and handle errors. It's time to learn to <a href="/tutorials/signal/">use the signal</a>.</p>
+</div>

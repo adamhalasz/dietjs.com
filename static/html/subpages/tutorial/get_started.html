@@ -1,0 +1,137 @@
+{{include 'parts/meta'}}
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro'}}</li>
+	<li>{{-link 'dependencies', 'Install Node.js'}}</li>
+	<li>{{-link 'structure', 'Project Structure'}}</li>
+	<li>{{-link 'install', 'Install Diet'}}</li>
+	<li>{{-link 'hello', 'Hello World!'}}</li>
+	<li>{{-link 'next', 'What\'s next?'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2>Get Started</h2>
+	{{-this.meta level: 1, duration: '5 minutes'}}
+	<br>
+	<h3>Table of Contents</h3>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		<li>{{-link 'dependencies', 'Install Node.js'}}</li>
+		<li>{{-link 'structure', 'Project Structure'}}</li>
+		<li>{{-link 'install', 'Install Diet'}}</li>
+		<li>{{-link 'hello', 'Hello World!'}}</li>
+		<li>{{-link 'next', 'What\'s next?'}}</li>
+	</ul>
+</div>
+
+<!-- INTRO -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro</h2>
+	<p>Hey there! Thanks for trying out diet! If you follow these guides you'll be shortly a node ninja! But before you dive in, make sure <i>you understand</i> the syntax of <a href="http://www.codecademy.com/en/tracks/javascript">javascript</a>, <a href="http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/">callbacks</a> and <a href="http://stackoverflow.com/a/111200">closures</a>.</p>
+</div>
+
+<!-- DEPENDENCIES -->
+<div data-section="dependencies" class="section wrap">
+	<h2>{{-link 'dependencies', '#'}} Install Node.js</h2>
+	<p>First things first! Diet is a module for node.js, so obviously you need node before diet. If you already have it that's great, just skip to the next section! If you don't, just spend 30 more seconds to install <a href="https://github.com/creationix/nvm">NVM</a> and <a href="http://nodejs.org/">Node.js</a> on your machine:</p>
+</div>
+
+<div class="code"><pre class="prettyprint wrap">
+# Install the Node Version Manager
+curl "https://raw.githubusercontent.com/creationix/nvm/v0.19.0/install.sh" | bash
+echo "source ~/.nvm/nvm.sh" >> ~/.bashrc
+echo "source ~/.nvm/nvm.sh" >> ~/.profile
+echo "source ~/.nvm/nvm.sh" >> ~/.zshrc
+source ~/.nvm/nvm.sh
+
+# Install Node.js
+nvm install 0.10.33
+
+# Set default node.js version
+nvm alias default 0.10.33
+
+</pre></div>
+
+<!-- INSTALL -->
+<div data-section="structure" class="section wrap">
+	<h2>{{-link 'structure', '#'}} Project Structure</h2>
+	<p>If you have all the above then you can start thinking about writing your code. However before you write any code it's good to know how to structure it. Usually people don't just write code anywhere.<p> 
+	<br>
+	<p>We use <i>Projects</i>. Projects aim to solve something so we call them applications or apps. Each project has a main folder that contains a bunch of files and folders. Diet projects usually start with an <i>index.js</i> file.</p>
+	
+</div>
+<div id="ss" class="code"><pre class="prettyprint wrap">
+# A sample project structure for diet.js
+
+/yourProject
+--- /node_modules          # Modules
+--- /routes                # Routes
+--- /models                # Database Models
+--- /static                # Static Files
+------ /html               # HTML Templates
+------ /images             # Images
+------ /scripts            # Javascripts (client-side)
+------ /styles             # CSS (Stylesheets)       
+--- index.js               # Index (your server starts here)
+--- config.json            # Environment Specific Variables (local/dev/production)
+--- package.json           # Dependencies
+</pre></div>
+
+<!-- INSTALL -->
+<div data-section="install" class="section wrap">
+	<h2>{{-link 'install', '#'}} Install Diet</h2>
+	<p>It's a good practice to install a copy of diet for every project instead of installing diet globally to avoid version related problems. Navigate to your project and install diet with <a href="http://npmjs.org">NPM</a>:</p>
+</div>
+<div class="code"><pre class="prettyprint wrap">
+# navigate to your project
+cd /yourProject
+
+# install diet
+npm install diet
+</pre></div>
+
+<!-- HELLO WORLD -->
+<div data-section="hello" class="section wrap">
+	<h2>{{-link 'hello', '#'}} Hello World!</h2>
+	<p>It's time to say hello to the world! Save this snippet of code in your <i>index.js</i>:</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // Create an app
+    var server = require('diet')
+    var app = server()
+    app.listen('http://localhost:8000')
+    
+    // When http://localhost:8000/ is requested, respond with "Hello World!"
+    app.get('/', function($){
+        $.end('Hello World!')
+    })
+	</pre></div>
+	<br>
+	<p>You can <i>start</i> your app from the terminal with:</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    node index.js
+	</pre></div>
+	<br>
+	<p>You need to <i>restart</i> your app every time you edit your code. If you are like me and you don't like this then checkout <a href="https://github.com/remy/nodemon">nodemon</a>. After you installed nodemon you can start your app by simply entering <i>"nodemon"</i> instead of <i>"node index.js"</i> and your app will restart every time you edit it.</p>
+</div>
+
+
+
+
+<!-- HELLO WORLD -->
+<div data-section="next" class="section wrap">
+	<h2>{{-link 'next', '#'}} What's next?</h2>
+	<p>Congratulations, you're one step closer to world domination! Now that you know how to setup your project and you've seen a working hello world app, it's time to understand how diet works.
+	<br><br>You can continue by learning to <a href="/tutorials/host">configure hosts</a>.</p>
+</div>

@@ -1,0 +1,490 @@
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+{{block 'menu':}}	
+	<li>{{-link 'server'}}</li>
+	<li>{{-link 'app.server'}}</li>
+	<li>{{-link 'app.listen'}}</li>
+	<li>{{-link 'app.get'}}</li>
+	<li>{{-link 'app.post'}}</li>
+	<li>{{-link 'app.header'}}</li>
+	<li>{{-link 'app.footer'}}</li>
+	<li>{{-link 'app.error'}}</li>
+	<li>{{-link 'app.missing'}}</li>
+	<li>{{-link 'app.location'}}</li>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	{{content 'menu'}}
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2><b>Server</b></h2>
+	<ul>
+		{{content 'menu'}}
+	</ul>
+</div>
+<div data-section="server" class="section wrap">
+	<h2>{{-link 'server', '#'}} server() <span class="attribute type">Function</span></h2>
+	<p>When diet is required it returns the server function that can be used to create Server Instances.</p>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// require diet
+var server = require('diet')
+	
+// create an instance
+var app = server()
+
+// create another instance
+var anotherApp = server()
+</pre></div>
+
+<div data-section="app.server" class="section wrap">
+	<h2>{{-link 'app.server', '#'}} app.server <span class="attribute type">object</span></h2>
+	<p>The return value of <i>http.createServer()</i> or <i>https.createServer()</i>.</p>
+</div>
+
+<div data-section="app.listen" class="section wrap">
+	<h2>{{-link 'app.listen', '#'}} app.listen(<i>location</i>, <i>httpsOptions</i>) <span class="attribute type">Function</span></h2>
+	<p>Each server instance has a unique host that is set with <i>app.listen()</i>.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">location</span> 
+			<span class="type">string</span> 
+			<span class="sep">or</span> 
+			<span class="type">object</span>
+		</h4>
+		<p>The location is usually a URL String containing the protocol "<b>http</b>" or "<b>https</b>", following the hostname "ex: <b>localhost</b>" then the port "ex: <b>8000</b>". The <i>location</i> can also be a URL Object.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">httpsOptions</span> 
+			<span class="type">object</span> 
+			<span class="optional">optional</span> 
+		</h4>
+		<p>Only required if the protocol is <b>https</b>.</p>
+	</div>
+</div>
+		
+	<div class="code"><pre class="prettyprint wrap">
+// Create a Server Instance
+var app = server()
+</div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// HTTP listen with a URL String
+app.listen('http://localhost:8000/')
+</div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// HTTP listen with a URL Object
+app.listen({
+    protocol: 'http:',
+    hostname: 'localhost',
+    port: 8000
+})
+</pre>
+</div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// HTTPS example
+app.listen('https://localhost:8000/', {
+    cert: 'secure.crt',
+    key: 'key.crt'
+})
+</pre></div>
+
+
+<div data-section="app.get" class="section wrap">
+	<h2>{{-link 'app.get', '#'}} app.get(<i>path</i>, <i>[callbacks,...]</i>) <span class="attribute type">Function</span></h2>
+	<p>Regsiters callback function(s) on the GET method with the specified path. </p>
+
+	<div class="attribute">
+		<h4>
+			<span class="label">path</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The url path you want to listen to.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">[callbacks...]</span> 
+			<span class="type">function</span> 
+			<span class="sep">or</span> 
+			<span class="type">function list</span>
+		</h4>
+		<p>The callback function(s) to run when the event is emitted. The callbacks have a single argument the <a href="/api/signal#get">GET Signal Object ($)</a>. Note if you are using multiple callbacks, each callback will be executed from the left to right each after the other.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var app = server()
+app.listen('http://localhost:8000/')
+</pre>
+</div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// Hello World
+app.get('/', function($){
+    $.end('welcome home.')
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// Register multiple callback functions
+
+// First callback
+function first($){
+    $.who = 'World'
+    $.return()
+}
+
+// Last callback
+function last($){
+    $.end('Hello ' + $.who)
+}
+
+// Register the callback functions on GET /about
+// so that when clients request GET http:/localhost:8000/about
+// the server responds with "Hello World"
+app.get('/about', first, last)
+
+</pre></div>
+
+<div data-section="app.post" class="section wrap">
+	<h2>{{-link 'app.post', '#'}} app.post(<i>path</i>, <i>[callbacks,...]</i>) <span class="attribute type">Function</span></h2>
+	<p>Regsiters callback function(s) on the POST method with the specified path. </p>
+
+	<div class="attribute">
+		<h4>
+			<span class="label">path</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The url path you want to listen to.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">[callbacks...]</span> 
+			<span class="type">function</span> 
+			<span class="sep">or</span> 
+			<span class="type">function list</span>
+		</h4>
+		<p>The callback function(s) to run when the event is emitted. The callbacks have a single argument the <a href="/api/signal#post">POST Signal Object ($)</a>. Note if you are using multiple callbacks, each callback will be executed from the left to right each after the other.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var db = require('models')                  // An example database model
+var session = require('session')            // An example session handler middleware module
+var app = server()                          // Create Server Instance
+app.listen('http://localhost:8000/')        // Listen on localhost:8000
+</pre>
+</div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// Example for Single callback function
+// Vote anonymously on an issue when requesting 
+// POST http:/localhost:8000/vote
+app.post('/vote', function($){
+    db.vote.create({
+        issue   : $.body.issue,
+        author  : 'anonymous'
+    }, function(error){
+    	if(error) throw error
+    	$.end('vote successfully submitted')
+    })
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// Example for multiple callback functions
+function protected($){
+    if($.session){
+    	$.return() // Middleware functions need to be returned
+    } else {
+    	$.end('operation not permitted')   
+    }
+}
+
+// Register callbacks on GET /about
+// "session" uses cookies to get account infos from the db
+// "protected" makes sure the session is logged in
+app.post('/article', session, protected, function($){
+    db.article.create({
+        title: $.body.title,
+        content: $.body.content,
+        author: $.session.id
+    }, function(error){
+    	if(error) throw error
+    	$.end('article created successfully')
+    })
+})
+
+</pre></div>
+
+<div data-section="app.header" class="section wrap">
+	<h2>{{-link 'app.header', '#'}} app.header(<i>[callbacks,...]</i>) <span class="attribute type">Function</span></h2>
+	<p>Regsiters callback function(s) to <b>All methods</b> and <b>All Routes</b>. Header functions run after the signal was created and before any Route callbacks and Middleware Modules.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">[callbacks...]</span> 
+			<span class="type">function</span> 
+			<span class="sep">or</span> 
+			<span class="type">function list</span>
+		</h4>
+		<p>The callback function(s) you want to run before every route. The callbacks have a single argument the <a href="/api/signal">GET or POST Signal Object ($)</a> depending on the request method. Note if you are using multiple callbacks, each callback will be executed from the left to right each after the other.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Create an App
+var app = server()                          // Create Server Instance
+app.listen('http://localhost:8000/')        // Listen on localhost:8000
+</pre>
+</div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// Register a global header function
+app.header(function($){
+   $.myVariable = 'yolo!'     // create a variable that is accessible in all requests
+   $.return()                 // header functions need to be returned
+})
+
+// Demonstration
+app.get('/somePath', function($){
+    $.end('I say ' + $.myVariabLe) // -> I say yolo!
+})
+app.get('/someOtherPath', function($){
+    $.end('I still say ' + $.myVariabLe) // -> I still say yolo!
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// Register multiple header functions
+
+// First callback
+function what($){
+    $.what = 'Hello'
+    $.return()
+}
+
+// Last callback
+function who($){
+    $.who = 'World'
+    $.return()
+}
+
+// Register headers 
+app.header(what, who)
+
+// Demonstration
+app.get('/', function($){
+   $.end($.what + ' ' + $.who) // -> Hello World
+})
+</pre></div>
+<br>
+<div class="code"><pre class="prettyprint wrap">
+// It is also possible to register headers separately
+app.header(what)
+app.header(who)
+</pre></div>
+
+<div data-section="app.footer" class="section wrap">
+	<h2>{{-link 'app.footer', '#'}} app.footer(<i>[callbacks,...]</i>) <span class="attribute type">Function</span></h2>
+	<p>Regsiters callback function(s) to <b>All methods</b> and <b>All Routes</b>. Footer functions run after  all Route callbacks and Middleware Modules have been loaded.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">[callbacks...]</span> 
+			<span class="type">function</span> 
+			<span class="sep">or</span> 
+			<span class="type">function list</span>
+		</h4>
+		<p>The callback function(s) you want to run before every route. The callbacks have a single argument the <a href="/api/signal">GET or POST Signal Object ($)</a> depending on the request method. Note if you are using multiple callbacks, each callback will be executed from the left to right each after the other.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Require dependencies
+var path = require('path')
+var mime = require('mime')
+var server = require('diet')
+
+// Create an app
+var app = server()                          // Create Server Instance
+app.listen('http://localhost:8000/')        // Listen on localhost:8000
+
+// Register a global footer function that handles static files
+// Do not use this in production!
+app.footer(function($){
+    var pathname   = $.url.pathname
+    var mimeType   = mime.lookup(pathname)
+    var extension  = path.extname(pathname)
+    var source     = app.path + pathname
+    
+    if(extension){
+    	$.header('Content-Type', mimeType)
+    	fs.readFile(source, function(error, data){
+            if(!error) {
+                $.end(data)
+                $.return()
+            } else if (error.type != 'ENOENT') {
+                $.status(error.status || 500, 'File not found');
+                $.return();
+            } else {
+                throw error;
+                $.return()
+            }
+    	})
+    } else {
+        $.return()
+    }
+})
+
+// GET http://localhost:8000/hello.png
+</pre></div>
+
+
+<div data-section="app.error" class="section wrap">
+	<h2>{{-link 'app.error', '#'}} app.error([<i>callbacks,...</i>]) <span class="attribute type">Function</span></h2>
+	<p>Catches errors in every route's middleware and allows to create logs and display user friendly message to clients.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">[callbacks...]</span> 
+			<span class="type">function</span> 
+			<span class="sep">or</span> 
+			<span class="type">function list</span>
+		</h4>
+		<p>The callback function(s) you want to run on errors. The callbacks have two arguments the <a href="/api/signal">GET or POST Signal Object ($)</a> depending on the request method and the <b>middleware</b> object that caused the error.</p>
+		<br>
+		<p>Note if you are using multiple callbacks, each callback will be executed from the left to right each after the other.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Create Server Instance
+var app = server()
+
+// Subscribe to all error events 
+app.error(function($, middleware){
+    // Log the error
+    console.trace('Something bad happened.', $.status, $.error.message)
+    
+    // Display error trace in developer environment
+    // OR display user friendly message in production environment
+    // '&lt;h1&gt;500 Internal Server Error&lt;/h1&gt;
+    if(process.env.NODE_ENV == 'development'){
+        $.return()
+    } else {  	
+    	$.end('&lt;h1&gt;'+ $.status +' '+ $.statusMessage +'&lt;/h1&gt;')
+    }
+})
+</pre></div>
+
+<div data-section="app.missing" class="section wrap">
+	<h2>{{-link 'app.missing', '#'}} app.missing([<i>callbacks,...</i>]) <span class="attribute type">Function</span></h2>
+	<p>Registers callbacks for cases when no routes and errors were found for an incoming request.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">[callbacks...]</span> 
+			<span class="type">function</span> 
+			<span class="sep">or</span> 
+			<span class="type">function list</span>
+		</h4>
+		<p>The callback function(s) you want to run. The callbacks have a single arguments a <a href="/api/signal">GET or POST Signal Object ($)</a> depending on the request method.</p>
+		<br>
+		<p>Note if you are using multiple callbacks, each callback will be executed from the left to right each after the other.</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// create an app
+var app = server()
+
+// Subscribe to missing event 
+app.missing(function($){
+    $.end($.status + ' ' + $.statusMessage) // -> 404 not found
+})
+</pre></div>
+
+<!-- URL -->
+<div data-section="app.location" class="section wrap">
+	<h2>{{-link 'app.location', '#'}} app.location <span class="attribute type">Object</span></h2>
+	<p>The JSON Parsed <i>location</i> attribute from <i>app.listen()</i>.</p>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">protocol</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The request/response protocol. It can be <i>http:</i> or <i>https:</i></p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">host</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The complete host including the port.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">hostname</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The hostname excluding the port.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">port</span> 
+			<span class="type">integer</span> 
+		</h4>
+		<p>The port.</p>
+	</div>
+	
+	<div class="attribute">
+		<h4>
+			<span class="label">href</span> 
+			<span class="type">string</span> 
+		</h4>
+		<p>The full URL</p>
+	</div>
+</div>
+		
+<div class="code"><pre class="prettyprint wrap">
+// Create an app
+var server = require('diet')
+var app = server()
+app.listen('http://localhost:8000')
+
+// Log Location
+console.log(app.location)
+
+// The above console.log outputs the following object 
+// when the path http://localhost:8000/ is requested.
+{  protocol: 'http:',
+   slashes: true,
+   host: 'localhost:8000',
+   hostname: 'localhost',
+   href: 'http://localhost:8000/' }
+</pre></div>

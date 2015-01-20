@@ -1,0 +1,189 @@
+{{include 'parts/meta'}}
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro'}}</li>
+	<li>{{-link 'install', 'installing modules'}}</li>
+	<li>{{-link 'use', 'using modules'}}</li>
+	<li>{{-link 'write', 'writing modules'}}</li>
+	<li>{{-link 'next', 'What\'s next?'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2>Modules</h2>
+	{{-this.meta level: 5, duration: '15 minutes'}}
+	<br>
+	<h3>Table of Contents</h3>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		<li>{{-link 'install', 'Installing Modules '}}</li>
+		<li>{{-link 'use', 'Using Modules'}}</li>
+		<li>{{-link 'write', 'Writing Modules'}}</li>
+		<li>{{-link 'next', 'What\'s next?'}}</li>
+	</ul>
+</div>
+
+<!-- INTRO -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro</h2>
+	<p><a href="http://en.wikipedia.org/wiki/Modular_programming">Modular programming</a> is a software design technique that emphasizes separating the functionality of a program into independent, interchangeable modules, such that each contains everything necessary to execute only one aspect of the desired functionality.</p>
+	<br>
+	<p>Conceptually, modules represent a separation of concerns, and improve maintainability by enforcing logical boundaries between components. </p>
+</div>
+
+<!-- INSTALLING -->
+<div data-section="install" class="section wrap">
+	<h2>{{-link 'install', '#'}} Installing Modules</h2>
+	<p>You can install modules by copying the module's folder into your project's <i>node_modules</i> folder. However you find can install node modules easier with <a href="http://npmjs.org/">NPM</a>.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    # Navigate to your project
+    cd /path/to/yourProject
+	
+    # Install a static module designed specifically for diet
+    npm install diet-static
+	</pre></div>
+</div>
+
+<!-- USING -->
+<div data-section="use" class="section wrap">
+	<h2>{{-link 'use', '#'}} Using Modules</h2>
+	<p>If your modules need to interact with diet's signal, then you need to attach them to your routes as middleware functions.</p>
+	<br>
+	<h3>A Static Server</h3>
+	<div class="code"><pre class="prettyprint">
+    // Setup server
+    var server = require('diet')        // Require diet
+    var app = server()                  // Create Server Instance
+    app.listen('http://localhost/')     // Listen on localhost port 80
+    
+    // Require the diet-static module and configure it
+    var static = require('diet-static')({ path: app.path+'/static/' }) 
+    
+    // Attach the static module as a footer middleware
+    app.footer(static)
+    
+    // This is a working static file server
+    // anything you put in ../yourProject/static/
+    // will be served as a file when requested
+    // for example: to load an image from "../~yourProject/static/cat.png"
+    // you can send a GET request to "http://localhost/image.png"
+	</pre></div>
+	<br><br>
+	<h3>Determine login state with Cookies</h3>
+	<div class="code"><pre class="prettyprint">
+    // Setup server
+    var server = require('diet')        // Require diet
+    var app = server()                  // Create Server Instance
+    app.listen('http://localhost/')     // Listen on Localhost
+	
+    // Require the diet-static module and configure it
+    var cookie = require('diet-cookies')
+	
+    // Attach the cookie module as a header middleware
+    app.header(cookie)
+	
+    app.get('/', function($){
+        if($.cookies.id){
+            $.end('logged in')
+        } else {
+            $.end('logged out')
+        }
+    })
+	</pre></div>
+</div>
+
+<!-- WRITING -->
+<div data-section="write" class="section wrap">
+	<h2>{{-link 'write', '#'}} Writing Modules</h2>
+	<p>To have a complete understanding of how modules work in node.js <a href="http://nodejs.org/api/modules.html">read the official API reference</a>. </p>
+	<br><br>
+	<h3>Add Module Example</h3>
+	<p>Let's create a very simple module that creates an <i>$.add</i> function when it is attached to a route. </p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // yourProject/node_modules/myModule/index.js
+    module.exports = function($){
+        $.add = function(a,b){
+            return a + b
+        }
+        $.return()
+    }
+	</pre></div>
+	<br>
+	<p>Now in your index file at <i>yourProject/index.js</i> you can create the server and load your new module.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // yourProject/index.js
+	
+    // Setup server
+    var server = require('diet')        // Require diet
+    var app = server()                  // Create Server Instance
+    app.listen('http://localhost/')     // Listen on Localhost
+	
+    // Require the diet-static module and configure it
+    var add = require('myModule')
+    
+    // Register the add middleware 
+    // and an anonymous function
+    // to "GET /" path
+    app.get('/', add, function($){
+    	var result = $.add(10,15)
+    	$.end(result) // -> 25
+    })
+	</pre></div>
+	<br><br>
+	<h3>Add Module Example with Options</h3>
+	<p>What if we want to call our module with options? That can be solved in a few ways a very simple solution is to return a callback in module.exports.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // yourProject/node_modules/myModule/index.js
+    module.exports = function(options){
+        function callback($){
+            $.add = function(a,b){
+                return options.prepend + (a + b)
+            }
+            $.return()
+        }
+        return callback
+    }
+	</pre></div>
+	<br>
+	<p>Now in your index file at <i>yourProject/index.js</i> you can create the server and load your new module.</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    // yourProject/index.js
+	
+    // Setup server
+    var server = require('diet')        // Require diet
+    var app = server()                  // Create Server Instance
+    app.listen('http://localhost/')     // Listen on Localhost
+	
+    // Require the diet-static module and configure it
+    var add = require('myModule')({ prepend: 'Hello World' })
+	
+    // Register the add middleware 
+    // and an anonymous function
+    // to "GET /" path
+    app.get('/', add, function($){
+        var result = $.add(10,15)
+        $.end(result) // -> Hello World 25
+    })
+	</pre></div>
+</div>
+
+<!-- NEXT -->
+<div data-section="next" class="section wrap">
+	<h2>{{-link 'next', '#'}} What's next?</h2>
+	<p>Congratulations, you completed all the tutorials! The next step is to build something on your own be it a website, an app, an api server or just a new module. Whatever you will build, good luck!</p>
+</div>
+

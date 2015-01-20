@@ -1,0 +1,11 @@
+{
+	"name": "dietjs.com",
+	"author": "adamhalasz",
+	"version": "0.1.0",
+	"homepage": "http://github.com/adamhalasz/dietjs.com/",
+	"dependencies": {
+	    "diet": ">=0.9.1",
+		"diet-ect": ">=0.1.0",
+		"diet-static": ">= 0.1.2"
+	}
+}

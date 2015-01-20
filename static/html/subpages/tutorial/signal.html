@@ -1,0 +1,333 @@
+{{include 'parts/meta'}}
+{{link = (text, innerHTML) -> }}<a class="toc-link" href="#{{-text}}">{{-if innerHTML then innerHTML else text}}</a>{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'intro', 'Intro'}}</li>
+	<li>{{-link 'request', 'request'}}</li>
+	<li>{{-link 'query'}}</li>
+	<li>{{-link 'params'}}</li>
+	<li>{{-link 'headers'}}</li>
+	<li>{{-link 'body'}}</li>
+	<li>{{-link 'responding'}}</li>
+	<li>{{-link 'json'}}</li>
+	<li>{{-link 'error-handling', 'error handling'}}</li>
+	<li>{{-link 'middleware'}}</li>
+	<li>{{-link 'next'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2>Signal</h2>
+	{{-this.meta level: 4, duration: '30 minutes'}}
+	<br>
+	<h3>Table of Contents</h3>
+	<ul>
+		<li>{{-link 'intro', 'Intro'}}</li>
+		<li>{{-link 'request', 'Request Methods'}}</li>
+		<li>{{-link 'query', 'Query String'}}</li>
+		<li>{{-link 'params', 'Query Parameters'}}</li>
+		<li>{{-link 'headers', 'Headers'}}</li>
+		<li>{{-link 'body', 'Post Body'}}</li>
+		<li>{{-link 'responding', 'Responding'}}</li>
+		<li>{{-link 'json', 'Responding with JSON'}}</li>
+		<li>{{-link 'error-handling', 'JSON Error Handling'}}</li>
+		<li>{{-link 'middleware', 'Passing data between middleware functions'}}</li>
+		<li>{{-link 'next', 'What\'s next?'}}</li>
+	</ul>
+</div>
+
+<!-- INTRO -->
+<div data-section="intro" class="section wrap">
+	<h2>{{-link 'intro', '#'}} Intro</h2>
+	<p>Node.js by default has two arguments <i>request</i> and <i>response</i> when creating a HTTP(s) server using <i>http.createServer()</i>. Diet combines these two objects into a single <i>Signal Object</i> that is represented by a dollar sign $.</p>
+	<br>
+	<p>While the signal combines these two objects, we are still using the request-reponse logic. This simplification allows faster learning, coding and an easier to use middleware layer.</p>
+</div>
+
+<!-- REQUEST METHODS -->
+<div data-section="request" class="section wrap">
+	<h2>{{-link 'request', '#'}} What are Request Methods?</h2>
+	<p>We use <a href="/api/signal/request">request methods</a> to identify resources on the server so that we can read, edit, save or delete them. We use them a lot since almost all dynamic interactions involve some kind of identification.</p>
+</div>
+
+<!-- QUERY STRING -->
+<div data-section="query" class="section wrap">
+	<h2>{{-link 'query', '#'}} Query String</h2>
+	<p>The query string is <a href="http://en.wikipedia.org/wiki/Query_string" target="_blank">part of the URL</a> containing data that does not fit conveniently into a hierarchical path structure <i>(/users/john/pictures)</i>. Diet parses the query string into a <a href="http://www.json.org/" target="_blank">JSON</a> object called <a href="/api/signal/request#query" target="_blank">$.query</a>. The query string starts with <i>?</i> and the keys are separated by <i>&amp;</i>.</p>
+	<br>
+	<h3>Query String Structure</h3>
+	<div class="code"><pre class="prettyprint ">
+    # An example URL with a query string having 2 key-values
+   
+    # --------------- ↓ the query string starts with a ?
+    "http://localhost/<span class="highlight">?</span>search=cats<span class="highlight">&amp;</span>show=pictures"
+    # ---------------------------- ↑ key-values are separated by a &amp;
+	</pre></div>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    # The above URL's query string is parsed into $.query
+    $.query = { 
+       search: "cats", 
+       show: "pictures" 
+    }
+	</pre></div>
+	<br><br>
+	<h3>Query String Usage Example</h3>
+	<p>Let's say a user requests the URL <i>"http://localhost/user?id=40"</i>. The query string in this URL is <i>?id=40</i> which is converted into <i>{ id: 40 }</i>. We can use the value to find a User's Account with the ID 40 in the database as you can see on the example below.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/user?id=40 is requested
+    // respond with "{ account: { id: 40, name: 'John Doe', age: 22 } }"
+    app.get('/user', function($){
+                            // ↓ $.query.id is parsed from the url "?id=40"
+    	db.accounts.find({ id: $.query.id }, function(error, account){         
+    	    if(error) throw error
+    	    $.data.account = account
+    	    $.success()
+    	})
+    })
+	</pre></div>
+	
+</div>
+
+<!-- QUERY STRING -->
+<div data-section="params" class="section wrap">
+	<h2>{{-link 'params', '#'}} Query Parameters</h2>
+	<p>The query parameters are used <a href="http://en.wikipedia.org/wiki/Semantic_URL" target="_blank">to create semantic URL's</a>. Diet parses the query parameters into a <a href="http://www.json.org/" target="_blank">JSON</a> object called <a href="/api/signal/request#params" target="_blank">$.params</a>.</p>
+	<br>
+	
+	<h3>Query Parameter Structure</h3>
+	<div class="code"><pre class="prettyprint ">
+    # An example pattern having 2 parameters
+    app.get('/users/:id/:page', handlerFunction)
+	</pre></div>
+	<br>
+	
+	<div class="code"><pre class="prettyprint ">
+    # The URL below is catched by the above pattern 
+    
+    # ---------------------- ↓ :id
+    "http://localhost/users/<span class="highlight">40</span>/<span class="highlight">videos</span>"
+    # ---------------------------- ↑ :page
+	</pre></div>
+	<br>
+	
+	<div class="code"><pre class="prettyprint ">
+    # The above URL's query parameters are parsed into $.params
+    $.params = { 
+        user: 40, 
+        page: "videos" 
+    }
+	</pre></div>
+	<br>
+	<br>
+	<h3>Query Parameter Usage Example</h3>
+	<p>Let's say a user requests the URL <i>"http://localhost/user/40"</i>. The query parameter in this URL is <i>40</i> which is catched by a pattern such as <i>:id</i>, and it's converted into <i>{ id: 40 }</i>. We can use the value to find a User's Account with the ID 40 in the database as you can see on the example below.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/user/40 is requested
+    // respond with "{ account: { id: 40, name: 'John Doe', age: 22 } }"
+    app.get('/user/:id', function($){
+                            // ↓ $.params.id is parsed from the url ":id"
+    	db.accounts.find({ id: $.params.id }, function(error, account){         
+    	    if(error) throw error
+    	    $.data.account = account
+    	    $.success()
+    	})
+    })
+	</pre></div>
+</div>
+
+<!-- HEADERS -->
+<div data-section="headers" class="section wrap">
+	<h2>{{-link 'headers', '#'}} Headers</h2>
+	<p>Just like HTML documents have <i>head</i> tags, HTTP Requests and Responses have them too, but with a different syntax. <a href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields">HTTP Headers</a> hold informations about the client, the server or the request/response body. Such informations are <a href="http://en.wikipedia.org/wiki/HTTP_cookie">Cookies</a>, <a href="http://en.wikipedia.org/wiki/Web_cache#Cache_control">Cache-Control</a>, <a href="http://en.wikipedia.org/wiki/Internet_media_type">Content-Type</a> and <a href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields">many others</a>. Both the request and response have HTTP headers.</p>
+	<br><br>
+	<h3>Reading Request and Response Headers</h3>
+	<p>You can read headers with the <a href="/api/signal/request#header">$.header()</a> function. </p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/myUserAgent is requested respond with:
+    // Your agent is: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0
+    app.get('/myUserAgent', function($){
+        var agent = $.header('User-Agent')
+        $.end('Your agent is: ' + agent)
+    })
+	</pre></div>
+	<br><br>
+	<h3>Sending Response Headers</h3>
+	<p>You can set headers also with the <a href="/api/signal/request#header">$.header()</a> function by using the second argument as the new value. Please note that you can set Request fields.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/contentLength is requested respond with:
+    // with the header: Content-Length=34
+    // and with the body: The length of this paragraph is 34
+    app.get('/contentLength', function($){
+        var response = 'The length of this paragraph is 34'
+        $.header('Content-Length', response.length)
+        $.end(response)
+    })
+	</pre></div>
+</div>
+
+<!-- BODY -->
+<div data-section="body" class="section wrap">
+	<h2>{{-link 'body', '#'}} Body</h2>
+	<p>Just like HTML documents have <i>body</i> tags, HTTP Requests and Responses have them too, but with a different syntax. <i>Every <u>response</u></i> has a body but only <i>POST <u>requests</u></i> have it. Please note I'm highlighting response and request for a reason, it's easy to get confused, keep in mind they are not the same!</p>
+	<br><br>
+	<h3>Reading POST Request Body with $.body</h3>
+	<p>Let's say this HTML form is submitted with the values: username: "john" and password "1234":</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    &lt;form method="POST" action="/login" &gt;
+    	&lt;input type="text" name="username" value="john" /&gt;
+    	&lt;input type="password" name="password" value="1234" /&gt;
+    	&lt;input type="submit" /&gt;
+    &lt;/form&gt;
+	</pre></div>
+	<br>
+	<p>All the inputs with a name and value will be converted into a JSON object called <a href="/api/signal/request#body">$.body</a>. The above form when submitted will create a request that diet can convert into:</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    $.body = {
+        username: "john",
+        password: 1234
+    }
+	</pre></div>
+	<br>
+	<p>In your routes you can work use the keys and values of $.body for many things. In this case checking the database records to perform the login would make sense, but for the sake of simplicity, we'll just output the values back to the client in JSON format.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/login is requested, respond with:
+    // { username: "john", password: 1234  }
+    app.post('/login', function($){
+        $.data.username = $.body.username  // Add body username to JSON data
+        $.data.password = $.body.password  // Add body password to JSON data
+        $.json()                           // Send JSON response
+    })
+	</pre></div>
+</div>
+
+<!-- RESPONDING -->
+<div data-section="responding" class="section wrap">
+	<h2>{{-link 'responding', '#'}} Responding</h2>
+	<p>In all of our previous examples we responded in our Routes because every request needs a response. When there is no response the client will probably show a Connection Timeout message to the users. There are two ways to respond, sending/streaming and ending the response.
+	<br><br>
+	<h3>$.end</h3>
+	<p>Ending a response is quite easy, you just need to call the <a href="/api/signal/response#end">$.end</a> function. Every request ends with $.end, even when using $.json, $.success and the $.error methods.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // this will show a blank page in a browser 
+    app.get('/', function($){
+        $.end()
+    })
+	</pre></div>
+	<br><br>
+	<h3>$.send</h3>
+	<p>You can send the response body as a whole with $.end() or you can stream it in chunks with <a href="/api/signal/response#send">$.send()</a>. The example below demonstrates this:</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    app.get('/', function($){
+    	$.send('hello')        // send "hello" immediately
+    	setTimeout(function(){
+    	    $.send('world')    // send "world" after 2 seconds
+    	    $.end()            // end after 2 seconds
+    	}, 2000)
+    })
+	</pre></div>
+</div>
+
+<!-- RESPONDING WITH JSON -->
+<div data-section="json" class="section wrap">
+	<h2>{{-link 'json', '#'}} Responding with JSON</h2>
+	<p>The signal has some special methods that are shortcuts for JSON stringified response data. In some cases defines some default values and headers too.  
+	<br><br>
+	<h3>JSON Response</h3>
+	<p>Using the <a href="/api/signal/response#json">$.json()</a> function we can end the answer with the JSON stringified version of <a href="/api/signal/response#data">$.data</a>.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    // When http://localhost/ is requested, respond with:
+    // { pancakes: "are good" }
+    app.get('/', function($){
+    	$.data.pancakes = 'are good'
+        $.json()
+    })
+	</pre></div>
+</div>
+
+<!-- ERROR HANDLING -->
+<div data-section="error-handling" class="section wrap">	
+	<h2>{{-link 'error-handling', '#'}} JSON Error Handling</h2>
+	<p>Using the <a href="/api/signal/response#success">$.success</a>, <a href="/api/signal/response#failure">$.failure</a>, <a href="/api/signal/response#error">$.error</a> and <a href="/api/signal/response#passed">$.passed</a> methods we can handle errors for clients expecting a JSON response. </p>
+	<br>
+	<h3></h3>
+	<div class="code"><pre class="prettyprint ">
+    app.post('/login', function($){
+    	// check if username and password is not empty
+        if(!$.body.username) $.error('username', 'empty')
+        if(!$.body.password) $.error('password', ' empty')
+        
+        // if any of the above tests fail $.passed is set to false
+        // since calling $.error also sets $.passed to false 
+        if($.passed){
+            // ... do custom login operation ...
+            
+            // then return: 
+            // { passed: true }
+            $.success()
+        } else {
+            // return:
+            // {   
+            //     passed: false, 
+            //     errors: { 
+            //          username: 'empty', 
+            //          password: 'empty' 
+            //     } 
+            // }
+            $.failure()
+        }
+    })
+	</pre></div>
+</div>
+
+<!-- MIDDLEWARE -->
+<div data-section="middleware" class="section wrap">
+	<h2>{{-link 'middleware', '#'}} Passing data between middleware functions</h2>
+	<p>When adding methods to the signal each following middleware function will have access to the new methods too. This allows to transmit data, functions and classes between functions.</p>
+	<br>
+	<div class="code"><pre class="prettyprint ">
+    app.header(function($){
+        $.myVar = 'hello'
+        $.return()
+    })
+	
+    function middle($){
+    	$.myVar += 'world'
+    	$.return()
+    }
+    
+    function middle2($){
+    	$.myVar += '!'
+    	$.return()
+    }
+    
+    function finish($){
+    	$.end($.myVar) // -> hello world!
+    }
+    
+    app.get('/', middle, middle2, finish)
+	</pre></div>
+</div>
+
+<!-- NEXT -->
+<div data-section="next" class="section wrap">
+	<h2>{{-link 'next', '#'}} What's next?</h2>
+	<p>Congratulations! Now that you know how to use the signal, you can already do anything! Now the only thing left to learn is <a href="/tutorials/modules">Modules</a> which will make your life a lot easier.</p>
+</div>
+

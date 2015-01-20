@@ -1,0 +1,62 @@
+{{link = (text, innerHTML) -> }}
+	<a class="toc-link" href="#{{-text}}">{{- if innerHTML then innerHTML else text}}</a>
+{{end}}
+
+<div id="page-image" class="page-image"></div>
+<div id="page-image2" class="page-image"></div>
+<div id="page-image3" class="page-image"></div>
+<div id="page-image4" class="page-image"></div>
+<div id="page-image5" class="page-image"></div>
+
+<ul id="toc-menu" style="display: none;">
+	<li>{{-link 'toc'}}</li>
+	<li>{{-link 'sloc', 'SLOC'}}</li>
+	<li>{{-link 'vanilla', 'Vanilla Node VS Diet'}}</li>
+	<li>{{-link 'comingsoon', 'More coming soon'}}</li>
+</ul>
+
+<div id="toc-list" data-section="toc" class="section wrap">
+	<h2>Tests &amp; Benchmarks</h2>
+	<ul>
+		<li>{{-link 'sloc', 'Source Lines of Code Comparison'}}</li>
+		<li>{{-link 'vanilla', 'Vanilla Node VS Diet'}}</li>
+		<li>{{-link 'comingsoon', 'More coming soon'}}</li>
+	</ul>
+</div>
+
+<!-- SOURCE-CODE -->
+<div data-section="sloc" class="section wrap">
+	<h2>{{-link 'sloc', '#'}} Source Lines of Code Comparison</h2>
+	<p>Diet is small. Really small. Having small source code leads to easy maintenance. As you can see below, <i>diet is significantly smaller than any other framework</i>.</p>
+	<br>
+	<p>Diet is allmost twice as small as the 2nd in the list. It is probably the smallest node.js web framework in the history! :P If web frameworks would be countries, diet would be definetely a libertarian utopia with the fewest and most effective policies.</p>
+	<div class="chart">
+		<div class="legend" id="sloc-comparison-legend"></div>
+		<canvas id="slocChart" width="400" height="300"></canvas>
+	</div>
+	
+	<p>Lower numbers mean smaller source code. The tests were taken with the <a href="https://www.npmjs.org/package/sloc">sloc command line</a> tool.</p>
+</div>
+
+<!-- VANILLA -->
+<div data-section="vanilla" class="section wrap">
+	<h2>{{-link 'vanilla', '#'}} Vanilla Node VS Diet</h2>
+	<p>Node.js by default is not optimised for web development. Without a framework it's harder to organize  projects and it's more difficult to collaborate with others. There are many ways to use Javascript just like any other language. Frameworks just like metric systems provide a common ground. 
+	<br><br> Because frameworks have clear use-cases and specifications, reading, debuging and contributing to projects that have a framework can be developed faster than projects that don't. 
+	<br><br>
+	A framework also provides better performance because it's optimised and better configured. The chart below demonstrates response time differences (in milliseconds) between "Hello World" apps written in <i><a href="http://github.com/gist/xxx">Vanilla Node.js</a></i> and <i><a href="http://github.com/gist/yyy">Diet</a></i>.
+	</p>
+	<br><br>
+	<h3>Response Time Comparison</h3>
+	<p>As you can see below, <i>Diet</i> is significantly faster than <i>Vanilla Node.js</i>, simply because it's optimised. Lower numbers mean better performance.</p>
+	<div class="chart">
+		<div class="legend" id="framework-comparison-legend"></div>
+		<canvas id="vanillaCanvas" width="400" height="150"></canvas>
+	</div>
+</div>
+
+<!-- COMING SOON -->
+<div data-section="comingsoon" class="section wrap">
+	<h2>{{-link 'comingsoon', '#'}} More coming soon</h2>
+	<p>More tests &amp; benchmarks are coming soon.</p>
+</div>
