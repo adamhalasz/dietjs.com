@@ -1,6 +1,8 @@
-# Welcome to Dietjs.com repository
+![Diet Logo](http://i.imgur.com/Dasjkkp.png)
 
-This is the source code for [dietjs.com](http://dietjs.com/)
+# Welcome to Dietjs.com repository. 
+
+This is the source code for [dietjs.com](http://dietjs.com/). The tiny, fast and modular node.js web framework.
 
 #### **Contributions are very welcome!**
 
