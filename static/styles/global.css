@@ -122,8 +122,8 @@ a:hover{
 	border-radius: 3px;
 	padding: 25px 0;
 	margin-left: 40px;
-	margin-right: 40px;
 	overflow: auto;
+	max-width: 740px;
 }
 
 #features{
@@ -393,6 +393,19 @@ p i{
 
 #content{
     margin-left: 250px;
+    margin-right: 150px;
+}
+
+.home #content,
+.resource.modules #content{
+    margin-right: 0;
+}
+
+ 
+
+img{
+    max-width: 100%;
+    height: auto;
 }
 
 #footer-element{
@@ -501,29 +514,37 @@ h2 .attribute.type{
     display: none;
 	position: fixed;
 	top: 0px;
-	left: 250px;
-	right: 0;
-	padding: 0 30px;
-	height: 36px;
+	
+    right: 0px;
+	
+    left: auto;
+	
+    text-align: right;
+    bottom: 0;
+    padding: 30px;
+	
+    height: auto;
 	overflow-x: auto;
-	white-space: nowrap;
-	background: rgba(255,255,255,0.9);
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.07);
+	
+    white-space: nowrap;
+	
+	
 	z-index: 100;
 	overflow-y: hidden;
 }
 
 #toc-menu li{
 	list-style-type: none;
-	display: inline;
+	display: block;
 	margin: 0 !important;
 	line-height: 0px !important;
+	padding: 0 !important;
 }
 
 #toc-menu li a{
-	height: 37px;
-	line-height: 36px;
-	font-size: 11px;
+	height: 25px;
+	line-height: 25px;
+	font-size: 10px;
 	font-weight: bold;
 	color: #9D9D9D;
 	padding: 0 10px;
@@ -840,6 +861,9 @@ td{
 }
 
 @media screen and (max-width: 960px) {
+    #toc-menu{
+        display: none !important;
+    }
 	#content{
 		margin-top: -20px;
 	}
@@ -856,6 +880,7 @@ td{
 	}
 	#content{
 		margin-left: 0;
+		margin-right: 0;
 	}
 	#footer-element{
 		margin-left: 0;

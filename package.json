@@ -3,20 +3,6 @@
 	"author": "adamhalasz",
 	"version": "0.1.0",
 	"homepage": "http://github.com/adamhalasz/dietjs.com/",
-	"bugs": {
-	  "url": "http://github.com/adamhalasz/dietjs.com/issues",
-	  "email": "mail@adamhalasz.com"
-	},
-	"repository": {
-	  "type": "git",
-	  "url": "https://github.com/adamhalasz/dietjs.com.git"
-	},
-	"license": "MIT",
-	"author": {
-	  "name": "Halász Ádám",
-	  "email": "mail@adamhalasz.com",
-	  "url": "http://adamhalasz.com/"
-	},
 	"dependencies": {
 	    "diet": ">=0.9.1",
 		"diet-ect": ">=0.1.0",

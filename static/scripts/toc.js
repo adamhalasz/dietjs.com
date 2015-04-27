@@ -62,7 +62,7 @@ function Toc(contentSelector, viewportSelector){
 	$('.toc-link').each(function(index, element){
 		$(element).click(function(event){
 			var section = $('[data-section="'+$(element).attr('href').split('#')[1]+'"]')
-			overflowSelector[0].scrollTop = section.offset().top-30;
+			overflowSelector[0].scrollTop = section.offset().top;
 		})
 	})
 }

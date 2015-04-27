@@ -15,7 +15,7 @@ var ect = require('diet-ect')({ path: app.path+'/static/html/' })
 var static = require('diet-static')({ path: app.path+'/static/' })
 
 // Globals
-app.header(ect, function($){ $.data.version = '0.9.1'; $.return(); })
+app.header(ect, function($){ $.data.version = '0.9.2'; $.return(); })
 app.footer(static)
 
 // Homepage
