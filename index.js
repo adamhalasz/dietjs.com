@@ -10,17 +10,17 @@ app.config = require('./config.js')
 // Domain
 app.listen(app.config.domain, app.config.https)
 
+var wwwApp = server();
+wwwApp.listen('http://www.dietjs.com/');
+wwwApp.missing(function($){ $.redirect('http://dietjs.com' + $.url.pathname) });
+
 // Content Modules
-var ect = require('diet-ect')({ path: app.path+'/static/html/' })
-var static = require('diet-static')({ path: app.path+'/static/' })
+var ect = require('diet-ect')({ path: app.path+'/views/html/' })
+var static = require('diet-static')({ path: app.path+'/views/' })
 
 // Globals
-app.header(ect, function($){ $.data.version = '0.9.3'; $.return(); })
+app.header(ect, function($){ $.data.version = '0.9'; $.return(); })
 app.footer(static)
-
-app.get('/test', function($){
-    $.end("hello world");
-});
 
 // Homepage
 app.get('/', function($){

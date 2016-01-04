@@ -74,17 +74,31 @@ nvm alias default 0.10.33
 # A sample project structure for diet.js
 
 /yourProject
---- /node_modules          # Modules
---- /routes                # Routes
---- /models                # Database Models
---- /static                # Static Files
+--- /node_modules          # Node Modules
+--- /routes                # Routes 
+--- /models                # Models (usually database models)
+--- /controllers           # Controllers (functions)
+--- /views                 # Views (static files, templates etc.)
 ------ /html               # HTML Templates
------- /images             # Images
 ------ /scripts            # Javascripts (client-side)
 ------ /styles             # CSS (Stylesheets)       
+------ /images             # Images
 --- index.js               # Index (your server starts here)
 --- config.json            # Environment Specific Variables (local/dev/production)
---- package.json           # Dependencies
+--- package.json           # Project Description &amp; Dependencies
+</pre></div>
+
+<div class="section wrap">
+    <p>If you want to generate a basic diet project with the above structure you can use our <a href="http://yeoman.io/">Yo</a> generator:</p>
+    
+</div>
+<div class="code"><pre class="prettyprint wrap">
+# install yo and generator-diet
+npm install -g yo
+npm install -g generator-diet
+
+# genereate new diet project
+yo diet
 </pre></div>
 
 <!-- INSTALL -->

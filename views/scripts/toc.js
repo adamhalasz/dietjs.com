@@ -16,7 +16,8 @@ function Toc(contentSelector, viewportSelector){
 		if(window.location.hash){
 			$('#toc-menu').show()
 			var section = $('[data-section="'+window.location.hash.split('#')[1]+'"]')
-			overflowSelector[0].scrollTop = findPos(section[0])-$('#toc-menu').offset().height
+			overflowSelector[0].scrollTop = section.offset().top
+			//overflowSelector[0].scrollTop = findPos(section[0])-$('#toc-menu').offset().height
 		}
 	}, 200)
 	
