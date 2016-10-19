@@ -43,7 +43,7 @@
 <!-- INSTALLING -->
 <div data-section="install" class="section wrap">
 	<h2>{{-link 'install', '#'}} Installing Modules</h2>
-	<p>You can install modules by copying the module's folder into your project's <i>node_modules</i> folder. However you find can install node modules easier with <a href="http://npmjs.org/">NPM</a>.</p>
+	<p>You can install modules by copying the module's folder into your project's <i>node_modules</i> folder. However you find can install node modules easier with <a href="http://yarnpkg.com/">Yarn</a> Or <a href="http://npmjs.org/">NPM</a>.</p>
 	<br>
 	<div class="code"><pre class="prettyprint">
     # Navigate to your project
@@ -53,6 +53,32 @@
     npm install diet-static
 	</pre></div>
 </div>
+
+
+
+<!-- USING a Express App or Middelware -->
+<div data-section="install" class="section wrap">
+	<p>You can use Express or Connect project's.</p>
+	<p>Install diet-express</p>
+	<br>
+	<div class="code"><pre class="prettyprint">
+    # Navigate to your project
+    cd /path/to/yourProject
+	
+    # Install a static module designed specifically for diet
+    npm install diet-express
+
+    # In your Diet.js App use it like this.	
+    var myExpressApp = require('express-middelware')(require('./express.js'))
+    
+    app.get('/', myExpressApp.use
+    , function($){
+        $.end('Diet.JS + ' + $.response.values) // -> Diet.JS + Express
+    })
+	</pre></div>
+</div>
+
+
 
 <!-- USING -->
 <div data-section="use" class="section wrap">
